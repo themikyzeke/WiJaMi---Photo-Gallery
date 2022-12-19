@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import Swal from "sweetalert2";
 import { useMutation } from "@tanstack/react-query";
+import { FormEvent, FunctionComponent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../../contexts/apiClientContext";
 import { errorAlert, successAlert } from "../../utils/alerts";
 
-export const Register = (props) => {
+export const Register:FunctionComponent = () => {
   const [name, setName] = useState("");
   const [pass, setPass] = useState("");
   const axios = useAxios();
@@ -14,7 +13,7 @@ export const Register = (props) => {
     axios.post("register", { username: name, password: pass })
   );
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e:FormEvent<any>) => {
     e.preventDefault();
     console.log(name);
   };
