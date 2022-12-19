@@ -6,7 +6,7 @@ export const Navbar = () => {
  
     return (
         <header>
-            <a className="logo" href="/"><img  src="WiJaMi Logo2.png"/></a> 
+            <a className="logo" href="/"><img  src="WiJaMi Logo3.png"/></a> 
             <button className="nav-btn">
                 <a href="/login"><IoLogOut/></a> 
             </button>

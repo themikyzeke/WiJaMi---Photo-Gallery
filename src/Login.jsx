@@ -15,7 +15,7 @@ export const Login = (props) => {
         <div className="form-container">
 
             <form className="login-form" onSubmit={handleSubmit}>
-                <h1>WiJaMi - Photo Gallery</h1>
+                <h1>Logowanie</h1>
                 <h5>Podaj swoje dane, aby się zalogować!</h5>
                 <input value={name} onChange={(e) => setName (e.target.value)} type="text" placeholder="Nazwa użytkownika" id="name" name="name"/>
 

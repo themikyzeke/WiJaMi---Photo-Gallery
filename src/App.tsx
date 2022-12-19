@@ -8,11 +8,10 @@ import React from 'react';
 
 function App() {
   return (
-    <><React.Fragment>
-      <Navbar />
-    </React.Fragment>
-    
-    <div className="App">
+    <div className="Background">
+      <br></br>
+        <Navbar />
+        <div className="App">
         <Router>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -20,7 +19,8 @@ function App() {
             <Route path="/" element={<Gallery />} />
           </Routes>
         </Router>
-      </div></>
+      </div>
+   </div>
   );
 }
 

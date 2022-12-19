@@ -16,8 +16,8 @@ export const Register = (props) => {
         <div className="form-container">
             
             <form className="register-form" onSubmit={handleSubmit}>
-                <h1>WiJaMi - Photo Gallery</h1>
-                <h5>Podaj swoje dane, aby się zarejestorwać!</h5>
+                <h1>Rejestracja</h1>
+                <h5>Podaj swoje dane, aby się zarejestrować!</h5>
                 <input value={name} onChange={(e) => setName (e.target.value)} type="text" placeholder="Nazwa użytkownika" id="name" name="name"/>
 
                 <input value={pass} onChange={(e) => setPass (e.target.value)} type="password" placeholder="Hasło" id="password" name="password"/>
