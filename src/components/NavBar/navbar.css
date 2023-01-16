@@ -11,8 +11,8 @@ header {
 	margin-left: 1.5rem;
 	margin-right: 1.5rem;
 	display: flex;
-	align-items: center;
 	justify-content: space-between;
+	align-items: center;
 	height: 80px;
 	padding: 0 2rem;
 	border-radius: 50px;
@@ -25,6 +25,18 @@ header {
 header a{
     color:rgb(29, 29, 29);
     
+}
+
+.nav-left {
+    height: 100%;
+    align-items: center;
+    padding-top: 0.5rem;
+    padding-left: 0.5rem; 
+	float: left;   
+}
+
+.nav-right{
+    float: right; 
 }
 
 header a :hover {
@@ -41,8 +53,7 @@ header .nav-btn {
 	visibility: visible;
 	opacity: 1;
 	font-size: 2.5rem;
-    
-    
+	margin-right: 10px;     
 }
 
 header div, nav {
@@ -58,6 +69,5 @@ header .logo{
     height: 100%;
     align-items: center;
     padding-top: 0.5rem;
-    padding-left: 0.5rem;
-    
+    padding-left: 0.5rem;    
 }

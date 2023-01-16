@@ -48,10 +48,10 @@ export const Register:FunctionComponent = () => {
             sendRegister.mutate(undefined, {
               onSuccess: () => {
                 navigate("/login");
-                successAlert("You have been register! Now you can log in!")
+                successAlert("Użytkownik zarejestrowany! Możesz się zalogować!")
               },
               onError: ()=>{
-                errorAlert("Failed to register")
+                errorAlert("Błąd podczas rejestarcji!")
               }
             });
           }}
