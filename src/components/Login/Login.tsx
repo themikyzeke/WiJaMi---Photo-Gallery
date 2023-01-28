@@ -1,26 +1,44 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { useAxios } from "../../contexts/apiClientContext";
-import { useToken } from "../../contexts/authTokenContext";
-import { successAlert } from "../../utils/alerts";
+import React, { useCallback, useEffect, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { useAxios } from '../../contexts/apiClientContext';
+import { successAlert } from '../../utils/alerts';
+import { useMeContext } from '../../contexts/meStore';
+import { GetMeDto } from '../../dtos/GetMe.dto';
 
 export const Login = (props: any) => {
   const navigate = useNavigate();
-  const axios = useAxios();
-  const [_, setToken] = useToken();
+  const [axios, setToken] = useAxios();
 
-  const [name, setName] = useState("");
-  const [pass, setPass] = useState("");
+  const [name, setName] = useState('');
+  const [pass, setPass] = useState('');
 
-  const sendLogin = useMutation(() =>
-    axios.post<string>("login", { username: name, password: pass })
-  );
+  const [isLoggedIn, setUserInfo] = useMeContext((state) => [
+    state.isLoggedIn,
+    state.setUserInfo,
+  ]);
+
+  const sendLogin = useMutation(async () => {
+    const { data: token } = await axios.post<string>('login', {
+      username: name,
+      password: pass,
+    });
+    setToken(token);
+    const { data } = await axios.get<GetMeDto>('users/me');
+    setUserInfo({
+      id: data.id,
+      username: data.login,
+    });
+  });
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log(name);
   };
+
+  if (isLoggedIn) {
+    navigate('/');
+    return null;
+  }
 
   return (
     <div className="form-container">
@@ -48,10 +66,9 @@ export const Login = (props: any) => {
         <button
           onClick={() => {
             sendLogin.mutate(undefined, {
-              onSuccess: ({ data }) => {
-                setToken(data);
-                successAlert("Welcome! You're now logged in!");
-                navigate("/");
+              onSuccess: () => {
+                successAlert('Zalogowano!');
+                navigate('/');
               },
             });
           }}
@@ -62,7 +79,7 @@ export const Login = (props: any) => {
         <button
           className="link-button"
           onClick={() => {
-            navigate("/register");
+            navigate('/register');
           }}
         >
           Nie masz konta? Zarejestruj się!
@@ -71,3 +88,4 @@ export const Login = (props: any) => {
     </div>
   );
 };
+

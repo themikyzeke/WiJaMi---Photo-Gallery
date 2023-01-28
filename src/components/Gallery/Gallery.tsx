@@ -1,112 +1,112 @@
-import { useToken } from "../../contexts/authTokenContext"
-import React, { useState } from "react";
-import data from "../../data/images.json"
-import Modal from "../../components/Gallery/Modal"
-import InfiniteScroll from "react-infinite-scroll-component"
+import React, { useState } from 'react';
+import data from '../../data/images.json';
+import Modal from '../../components/Gallery/Modal';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { WelcomeLine } from './WelcomeLine/WelcomeLine';
 
 export const Gallery = () => {
-    const[token ]= useToken()
+  const [clickedImg, setClickedImg] = useState<any | null>(null);
+  const [currentIndex, setCurrentIndex] = useState<any | null>(null);
 
-    const[clickedImg, setClickedImg] = useState< any | null>(null);
-    const[currentIndex, setCurrentIndex] = useState< any | null>(null);
+  const handleClick = (item: any, index: any) => {
+    setCurrentIndex(index);
+    setClickedImg(item.link);
+  };
 
-    const handleClick = (item: any, index: any) => {
-        setCurrentIndex(index);
-        setClickedImg(item.link);
-    };
-
-    const handleNavigationRight = () => {
-       const totalLength = data.data.length;
-       if(currentIndex +1 >= totalLength) {
-        setCurrentIndex(0);
-        const newUrl = data.data[0].link;
-        setClickedImg(newUrl);
-        return;
-       }
-       const newIndex = currentIndex+1;
-       const newUrl = data.data.filter((item) => {
-        return data.data.indexOf(item) === newIndex;
-       });
-       const newItem = newUrl[0].link;
-       setClickedImg(newItem);
-       setCurrentIndex(newIndex);
-    };
-
-    const handleNavigationLeft = () => {
-        const totalLength = data.data.length;
-       if(currentIndex === 0) {
-        setCurrentIndex(totalLength-1);
-        const newUrl = data.data[totalLength-1].link;
-        setClickedImg(newUrl);
-        return;
-       }
-       const newIndex = currentIndex-1;
-       const newUrl = data.data.filter((item) => {
-        return data.data.indexOf(item) === newIndex;
-       });
-       const newItem = newUrl[0].link;
-       setClickedImg(newItem);
-       setCurrentIndex(newIndex);
-    };
-
-    const [dataSource, setDataSource] = useState(Array.from({length:2}))
-
-    const [hasMore, setHasMore] = useState(true)
-
-    const fetchMoreData =()=>{
-
-        if (dataSource.length < 10) {
-            //API CALL TUTAJ
-            setTimeout(() => {
-                setDataSource(dataSource.concat(Array.from({ length: 2 })))
-            }, 1000);
-        }
-        else{
-            setHasMore(false);
-        }
-
-        
+  const handleNavigationRight = () => {
+    const totalLength = data.data.length;
+    if (currentIndex + 1 >= totalLength) {
+      setCurrentIndex(0);
+      const newUrl = data.data[0].link;
+      setClickedImg(newUrl);
+      return;
     }
+    const newIndex = currentIndex + 1;
+    const newUrl = data.data.filter((item) => {
+      return data.data.indexOf(item) === newIndex;
+    });
+    const newItem = newUrl[0].link;
+    setClickedImg(newItem);
+    setCurrentIndex(newIndex);
+  };
 
-    return (
-        <div className="main-menu">
-            <div className="content-layer">
+  const handleNavigationLeft = () => {
+    const totalLength = data.data.length;
+    if (currentIndex === 0) {
+      setCurrentIndex(totalLength - 1);
+      const newUrl = data.data[totalLength - 1].link;
+      setClickedImg(newUrl);
+      return;
+    }
+    const newIndex = currentIndex - 1;
+    const newUrl = data.data.filter((item) => {
+      return data.data.indexOf(item) === newIndex;
+    });
+    const newItem = newUrl[0].link;
+    setClickedImg(newItem);
+    setCurrentIndex(newIndex);
+  };
 
-            <div className="about">
-                <h3>👋 Cześć user!</h3>
-                <h4>Galeria zdjęć</h4>
-            </div>
+  const [dataSource, setDataSource] = useState(Array.from({ length: 2 }));
 
-            <div className="line-breaker">
-                    <hr></hr>
-                </div>
+  const [hasMore, setHasMore] = useState(true);
 
-                <InfiniteScroll
-                    dataLength={dataSource.length}
-                    next={fetchMoreData}
-                    hasMore={hasMore}
-                    loader={<h4>Ładowanie...</h4>}
-                    endMessage={<h4>Dotarłeś do końca swojej galerii!</h4>}>
-                    {dataSource.map((item, index) => {
-                        return (
+  const fetchMoreData = () => {
+    if (dataSource.length < 10) {
+      //API CALL TUTAJ
+      setTimeout(() => {
+        setDataSource(dataSource.concat(Array.from({ length: 2 })));
+      }, 1000);
+    } else {
+      setHasMore(false);
+    }
+  };
 
-                            <div className="photo-grid-row">
-                                <div className="photo-grid-column">
+  return (
+    <div className="main-menu">
+      <div className="content-layer">
+        <WelcomeLine />
 
-                                    {data.data.map((item, index) => (
-                                        <div key={index}>
-                                            <img src={item.link} alt={item.alt} onClick={() => handleClick(item, index)} />
-                                        </div>
-                                    ))}
-
-                                    {clickedImg && <Modal clickedImg={clickedImg} handleNavigationLeft={handleNavigationLeft} handleNavigationRight={handleNavigationRight} setClickedImg={setClickedImg} />}
-                                </div>
-
-                            </div>
-                        );
-                    })}
-                </InfiniteScroll>
-            </div>
+        <div className="line-breaker">
+          <hr></hr>
         </div>
-    )
-}
+
+        <InfiniteScroll
+          dataLength={dataSource.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={<h4>Ładowanie...</h4>}
+          endMessage={<h4>Dotarłeś do końca swojej galerii!</h4>}
+        >
+          {dataSource.map((item, index) => {
+            return (
+              <div className="photo-grid-row" key={`pgr-${index}`}>
+                <div className="photo-grid-column">
+                  {data.data.map((item, index) => (
+                    <div key={index}>
+                      <img
+                        src={item.link}
+                        alt={item.alt}
+                        onClick={() => handleClick(item, index)}
+                      />
+                    </div>
+                  ))}
+
+                  {clickedImg && (
+                    <Modal
+                      clickedImg={clickedImg}
+                      handleNavigationLeft={handleNavigationLeft}
+                      handleNavigationRight={handleNavigationRight}
+                      setClickedImg={setClickedImg}
+                    />
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </InfiniteScroll>
+      </div>
+    </div>
+  );
+};
+

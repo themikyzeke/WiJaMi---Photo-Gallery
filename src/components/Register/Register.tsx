@@ -1,19 +1,19 @@
-import { useMutation } from "@tanstack/react-query";
-import { FormEvent, FunctionComponent, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAxios } from "../../contexts/apiClientContext";
-import { errorAlert, successAlert } from "../../utils/alerts";
+import { useMutation } from '@tanstack/react-query';
+import { FormEvent, FunctionComponent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAxios } from '../../contexts/apiClientContext';
+import { errorAlert, successAlert } from '../../utils/alerts';
 
-export const Register:FunctionComponent = () => {
-  const [name, setName] = useState("");
-  const [pass, setPass] = useState("");
-  const axios = useAxios();
+export const Register: FunctionComponent = () => {
+  const [name, setName] = useState('');
+  const [pass, setPass] = useState('');
+  const [axios] = useAxios();
 
   const sendRegister = useMutation(() =>
-    axios.post("register", { username: name, password: pass })
+    axios.post('register', { username: name, password: pass }),
   );
 
-  const handleSubmit = (e:FormEvent<any>) => {
+  const handleSubmit = (e: FormEvent<any>) => {
     e.preventDefault();
     console.log(name);
   };
@@ -47,12 +47,14 @@ export const Register:FunctionComponent = () => {
           onClick={() => {
             sendRegister.mutate(undefined, {
               onSuccess: () => {
-                navigate("/login");
-                successAlert("Użytkownik zarejestrowany! Możesz się zalogować!")
+                navigate('/login');
+                successAlert(
+                  'Użytkownik zarejestrowany! Możesz się zalogować!',
+                );
               },
-              onError: ()=>{
-                errorAlert("Błąd podczas rejestarcji!")
-              }
+              onError: () => {
+                errorAlert('Błąd podczas rejestarcji!');
+              },
             });
           }}
         >
@@ -62,13 +64,14 @@ export const Register:FunctionComponent = () => {
         <button
           className="link-button"
           onClick={() => {
-            navigate("/login");
+            navigate('/login');
           }}
         >
-          {" "}
+          {' '}
           Masz już konto? Zaloguj się!
         </button>
       </form>
     </div>
   );
 };
+
