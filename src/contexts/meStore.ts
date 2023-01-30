@@ -21,12 +21,14 @@ export type MeContext = (
 export const useMeContext = create<MeContext>(
   (set: (userInfo: Partial<MeContext>) => void) => ({
     isLoggedIn: false,
+    userInfo: undefined,
     setUserInfo: (userInfo: UserInfo | undefined): void => {
       if (!userInfo) {
         set({
           isLoggedIn: false,
           userInfo: undefined,
         });
+        console.log('set no user info');
         return;
       }
 
@@ -34,6 +36,7 @@ export const useMeContext = create<MeContext>(
         isLoggedIn: true,
         userInfo: userInfo,
       });
+      console.log('set user info');
     },
   }),
 );

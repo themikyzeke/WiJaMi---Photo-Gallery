@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import data from '../../data/images.json';
 import Modal from '../../components/Gallery/Modal';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { WelcomeLine } from './WelcomeLine/WelcomeLine';
+import { Greeter } from './Greeter/Greeter';
+import { useAxios } from '../../contexts/apiClientContext';
 
 export const Gallery = () => {
   const [clickedImg, setClickedImg] = useState<any | null>(null);
   const [currentIndex, setCurrentIndex] = useState<any | null>(null);
+  const [axios] = useAxios();
 
   const handleClick = (item: any, index: any) => {
     setCurrentIndex(index);
@@ -65,7 +67,7 @@ export const Gallery = () => {
   return (
     <div className="main-menu">
       <div className="content-layer">
-        <WelcomeLine />
+        <Greeter />
 
         <div className="line-breaker">
           <hr></hr>

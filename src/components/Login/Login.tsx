@@ -1,22 +1,20 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useAxios } from '../../contexts/apiClientContext';
-import { successAlert } from '../../utils/alerts';
 import { useMeContext } from '../../contexts/meStore';
-import { GetMeDto } from '../../dtos/GetMe.dto';
+import { useRedirectToHomePage } from '../../router/redirects/useRedirectToHomePage';
+import { useRedirectToRegister } from '../../router/redirects/useRedirectToRegister';
+import { errorAlert, successAlert } from '../../utils/alerts';
 
 export const Login = (props: any) => {
-  const navigate = useNavigate();
+  const redirectToHomePage = useRedirectToHomePage();
+  const redirectToRegister = useRedirectToRegister();
   const [axios, setToken] = useAxios();
 
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
 
-  const [isLoggedIn, setUserInfo] = useMeContext((state) => [
-    state.isLoggedIn,
-    state.setUserInfo,
-  ]);
+  const isLoggedIn = useMeContext((state) => state.isLoggedIn);
 
   const sendLogin = useMutation(async () => {
     const { data: token } = await axios.post<string>('login', {
@@ -24,11 +22,6 @@ export const Login = (props: any) => {
       password: pass,
     });
     setToken(token);
-    const { data } = await axios.get<GetMeDto>('users/me');
-    setUserInfo({
-      id: data.id,
-      username: data.login,
-    });
   });
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
@@ -36,7 +29,7 @@ export const Login = (props: any) => {
   };
 
   if (isLoggedIn) {
-    navigate('/');
+    redirectToHomePage();
     return null;
   }
 
@@ -68,7 +61,10 @@ export const Login = (props: any) => {
             sendLogin.mutate(undefined, {
               onSuccess: () => {
                 successAlert('Zalogowano!');
-                navigate('/');
+                redirectToHomePage();
+              },
+              onError: () => {
+                errorAlert('Failed to login! Invalid credntails!');
               },
             });
           }}
@@ -76,12 +72,7 @@ export const Login = (props: any) => {
           Zaloguj się!
         </button>
 
-        <button
-          className="link-button"
-          onClick={() => {
-            navigate('/register');
-          }}
-        >
+        <button className="link-button" onClick={redirectToRegister}>
           Nie masz konta? Zarejestruj się!
         </button>
       </form>
