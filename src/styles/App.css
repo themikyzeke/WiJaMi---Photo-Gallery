@@ -1,40 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;700&display=swap');
 
-@import url("https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;700&display=swap");
-
-.Background{
+.Background {
   background-size: 300% 300%;
   min-height: 100vh;
   background-image: linear-gradient(
-        -45deg, 
-       	rgba(59,173,227,1) 0%, 
-        rgba(87,111,230,1) 25%, 
-        rgba(152,68,183,1) 51%, 
-        rgba(255,53,127,1) 100%
-  );  
+    -45deg,
+    rgba(59, 173, 227, 1) 0%,
+    rgba(87, 111, 230, 1) 25%,
+    rgba(152, 68, 183, 1) 51%,
+    rgba(255, 53, 127, 1) 100%
+  );
   animation: AnimateBG 20s ease infinite;
 }
 
-@keyframes AnimateBG { 
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
+@keyframes AnimateBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .App {
-  font-family: "Titillium Web", sans-serif;
+  font-family: 'Titillium Web', sans-serif;
   text-align: center;
   display: flex;
   min-height: 85vh;
   align-items: center;
   justify-content: center;
   color: white;
-  
 }
 
-
-.form-containter, .login-form, .register-form {
+.form-containter,
+.login-form,
+.register-form {
   display: flex;
-  flex-direction: column;  
+  flex-direction: column;
   padding-bottom: 4rem;
   padding-left: 4rem;
   padding-right: 4rem;
@@ -45,47 +50,47 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-h1{
+h1 {
   color: rgb(54, 54, 54);
   border-radius: 10px;
   padding-bottom: 1rem;
 }
 
-h2{
+h2 {
   color: rgb(54, 54, 54);
   padding-bottom: 2rem;
 }
 
-h5{
+h5 {
   color: rgb(54, 54, 54);
   padding-bottom: 1rem;
 }
 
-.logo-img{
+.logo-img {
   width: 100%;
   max-width: 400px;
   height: auto;
 }
 
-input{
+input {
   margin: 0.2rem 0;
   border: none;
-  padding:  1rem;
+  padding: 1rem;
   border-radius: 10px;
   background-color: rgba(255, 255, 255, 0.9);
 }
 
-button{
+button {
   margin-top: 1rem;
   border: none;
   background-color: rgb(48, 156, 245, 0.9);
   color: white;
-  padding:  1rem;
+  padding: 1rem;
   border-radius: 10px;
   cursor: pointer;
 }
 
-.link-button{
+.link-button {
   background: none;
   color: black;
   text-decoration: underline;
@@ -103,30 +108,37 @@ button{
   align-items: left;
   justify-content: left;
   padding-left: 0.5rem;
+  width: 100%;
 }
 
-h3{
+h3 {
   color: rgb(255, 255, 255);
-  font-size:250%;
+  font-size: 250%;
   padding-top: 2rem;
 }
 
-h4{
+h4 {
   color: rgb(255, 255, 255);
   font-size: 150%;
   padding-top: 1rem;
   padding-bottom: 0.5rem;
 }
 
-.content-layer{
-  padding-bottom:64px;
-  margin-left:auto;
-  margin-right:auto;
-  max-width:80vw;
+.content-layer {
+  padding-bottom: 64px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
 }
 
-.line-breaker{
-  opacity:0.80;
+.galery-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.line-breaker {
+  opacity: 0.8;
   width: 141px;
   text-align: left;
   align-items: left;
@@ -135,7 +147,7 @@ h4{
   padding-left: 0.5rem;
 }
 
-.photo-grid-row{
+.photo-grid-row {
   display: flex;
   flex-wrap: wrap;
   padding: 0 4px;
@@ -159,13 +171,13 @@ h4{
 }
 
 @media screen and (max-width: 800px) {
-  .photo-grid-column  {
+  .photo-grid-column {
     flex: 100%;
     max-width: 100%;
   }
 }
 
-.photo-grid-column img:hover{
+.photo-grid-column img:hover {
   transform: scale(1.01);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4), -2px -2px 5px rgb(0, 0, 0, 0.4);
 }
@@ -232,12 +244,14 @@ h4{
   z-index: 999;
 }
 
-.overlay-arrows_left:hover, .overlay-arrows_right:hover{
+.overlay-arrows_left:hover,
+.overlay-arrows_right:hover {
   transform: scale(1.1);
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4), -2px -2px 5px rgb(0, 0, 0, 0.4);
 }
 
-.overlay span:hover{
+.overlay span:hover {
   transform: scale(1.2);
   color: #ff0000;
 }
+
