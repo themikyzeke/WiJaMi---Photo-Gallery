@@ -2,11 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import axios, { AxiosInstance } from 'axios';
 import {
   createContext,
-  useEffect,
-  useMemo,
-  useContext,
   FunctionComponent,
   PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { GetMeDto } from '../dtos/GetMe.dto';
@@ -22,10 +23,7 @@ export const apiClientContext = createContext<ApiClientContext>({} as any);
 export const ApiClientProvider: FunctionComponent<PropsWithChildren> = ({
   children,
 }) => {
-  const [isLoggedIn, setUserInfo] = useMeContext((state) => [
-    state.isLoggedIn,
-    state.setUserInfo,
-  ]);
+  const setUserInfo = useMeContext((state) => state.setUserInfo);
 
   const axiosInstance = useMemo(
     () =>
@@ -49,10 +47,6 @@ export const ApiClientProvider: FunctionComponent<PropsWithChildren> = ({
   });
 
   useEffect(() => {
-    setToken(localStorage.getItem('token') ?? undefined);
-  }, []);
-
-  useEffect(() => {
     if (!meData || !token) {
       setUserInfo(undefined);
       return;
@@ -62,37 +56,43 @@ export const ApiClientProvider: FunctionComponent<PropsWithChildren> = ({
       id: meData.id,
       username: meData.login,
     });
-  }, [meData, token]);
+  }, [meData, token, setUserInfo]);
 
-  const setToken = (tokenToSet?: string) => {
-    if (tokenToSet === token) {
-      return;
-    }
+  const setToken = useCallback(
+    (tokenToSet?: string) => {
+      if (tokenToSet === token) {
+        return;
+      }
 
-    if (authInterceptor) {
-      axiosInstance.interceptors.request.eject(authInterceptor);
-    }
+      if (authInterceptor) {
+        axiosInstance.interceptors.request.eject(authInterceptor);
+      }
 
-    if (tokenToSet) {
-      localStorage.setItem('token', tokenToSet);
+      if (tokenToSet) {
+        localStorage.setItem('token', tokenToSet);
 
-      const newAuthInterceptor = axiosInstance.interceptors.request.use(
-        function (config) {
-          config.headers = config.headers ?? {};
-          config.headers.Authorization = `Bearer ${tokenToSet}`;
+        const newAuthInterceptor = axiosInstance.interceptors.request.use(
+          function (config) {
+            config.headers = config.headers ?? {};
+            config.headers.Authorization = `Bearer ${tokenToSet}`;
 
-          return config;
-        },
-      );
+            return config;
+          },
+        );
 
-      setAuthInterceptor(newAuthInterceptor);
-    } else {
-      localStorage.removeItem('token');
-    }
+        setAuthInterceptor(newAuthInterceptor);
+      } else {
+        localStorage.removeItem('token');
+      }
 
-    setLocalToken(tokenToSet);
-  };
+      setLocalToken(tokenToSet);
+    },
+    [setLocalToken, setAuthInterceptor, axiosInstance, token, authInterceptor],
+  );
 
+  useEffect(() => {
+    setToken(localStorage.getItem('token') ?? undefined);
+  }, [setToken]);
   return (
     <apiClientContext.Provider value={[axiosInstance, setToken, token]}>
       {children}
