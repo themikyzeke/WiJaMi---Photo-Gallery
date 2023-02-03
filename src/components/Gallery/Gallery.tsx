@@ -14,6 +14,7 @@ export interface ImagesResponse {
 }
 
 const PAGE_SIZE = 5;
+const COLUMN_COUNT = 2;
 
 export const Gallery = () => {
   const [clickedImg, setClickedImg] = useState<string | null>(null);
@@ -55,6 +56,18 @@ export const Gallery = () => {
   });
 
   const data = useMemo(() => imageData?.pages?.flat() ?? [], [imageData]);
+  const columnedData = useMemo(
+    () =>
+      data.reduce<Array<ImagesResponse[]>>((result, image, index) => {
+        const columnIndex = index % COLUMN_COUNT;
+
+        result[columnIndex] ??= [];
+        result[columnIndex].push(image);
+
+        return result;
+      }, []),
+    [data, COLUMN_COUNT],
+  );
 
   const handleClick = (imageUrl: string, index: number) => {
     setCurrentIndex(index);
@@ -146,23 +159,45 @@ export const Gallery = () => {
             >
               {/* {data.data.map((item, index) => ( */}
               <div className="photo-grid-row" key={`page-${1}`}>
-                <div className="photo-grid-column">
-                  {data.map((item, itemIndex) => {
-                    return (
+                {columnedData.map((columnData, columnIndex) => (
+                  <div className="photo-grid-column">
+                    {columnData.map((item, itemIndex) => (
                       <div
                         className="galery-item"
-                        key={`image-p${itemIndex}-i${1}`}
+                        key={`image--c${columnIndex}-p${itemIndex}-i${1}`}
                       >
                         <img
                           src={item.imageFileName}
                           onClick={() =>
-                            handleClick(item.imageFileName, itemIndex)
+                            handleClick(
+                              item.imageFileName,
+                              COLUMN_COUNT * itemIndex + columnIndex,
+                            )
                           }
                         />
                       </div>
-                    );
-                  })}
-                </div>
+                    ))}
+                  </div>
+                ))}
+                {/* <div className="photo-grid-column">
+                  {data
+                    .filter((_, index) => (index + 1) % 2)
+                    .map((item, itemIndex) => {
+                      return (
+                        <div
+                          className="galery-item"
+                          key={`image-p${itemIndex}-i${1}`}
+                        >
+                          <img
+                            src={item.imageFileName}
+                            onClick={() =>
+                              handleClick(item.imageFileName, itemIndex)
+                            }
+                          />
+                        </div>
+                      );
+                    })}
+                </div> */}
               </div>
 
               {/* })} */}
@@ -176,7 +211,7 @@ export const Gallery = () => {
               setClickedImg={setClickedImg}
               hideLeft={currentIndex === 0}
               hideRight={
-                !!currentIndex && currentIndex === data.length && !hasMore
+                !!currentIndex && currentIndex === data.length - 1 && !hasMore
               }
             />
           )}
