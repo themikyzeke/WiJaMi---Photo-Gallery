@@ -9,7 +9,7 @@ export const Greeter: FC = () => {
 
   return (
     <div className="about">
-      {isLoggedIn && <h3>👋 Cześć {userInfo!.username}!</h3>}
+      <h3>👋 Witaj w galerii{isLoggedIn && ` ${userInfo!.username}`}!</h3>
     </div>
   );
 };

@@ -88,7 +88,7 @@ export const MyGalery = () => {
           handleLoadMore={fetchNextPage}
         />
       )}
-      {(!isFetchedAfterMount || isFetching) && hasMore && (
+      {(!isFetchedAfterMount || (isFetching && hasMore)) && (
         <PacmanLoader color="#ffff00" />
       )}
 

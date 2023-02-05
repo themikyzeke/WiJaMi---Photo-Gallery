@@ -67,7 +67,7 @@ export const AllGalery = () => {
           }
         />
       )}
-      {(!isFetchedAfterMount || isFetching) && hasMore && (
+      {(!isFetchedAfterMount || (isFetching && hasMore)) && (
         <PacmanLoader color="#ffff00" />
       )}
     </div>

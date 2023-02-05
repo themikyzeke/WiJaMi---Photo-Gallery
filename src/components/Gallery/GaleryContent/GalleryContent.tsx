@@ -40,7 +40,7 @@ export const GalleryContent: FC<GalleryContentProps> = ({
       {/* {data.data.map((item, index) => ( */}
       <div className="photo-grid-row" key={`page-${1}`}>
         {columnedData.map((columnData, columnIndex) => (
-          <div className="photo-grid-column">
+          <div className="photo-grid-column" key={`pgc-${columnIndex}`}>
             {columnData.map((item, itemIndex) => (
               <div
                 className="galery-item"
