@@ -1,11 +1,8 @@
-import { QueryFunctionContext, useInfiniteQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroll-component';
-import { PacmanLoader } from 'react-spinners';
-import Modal from '../../components/Gallery/Modal';
-import { useAxios } from '../../contexts/apiClientContext';
-import { sleep } from '../../utils/sleep';
+import { Tabs } from 'antd';
+import { useState } from 'react';
+import { AllGalery } from './AllGallery';
 import { Greeter } from './Greeter/Greeter';
+import { MyGalery } from './MyGallery';
 
 export interface ImagesResponse {
   id: number;
@@ -14,211 +11,32 @@ export interface ImagesResponse {
 }
 
 const PAGE_SIZE = 5;
-const COLUMN_COUNT = 2;
 
 export const Gallery = () => {
-  const [clickedImg, setClickedImg] = useState<string | null>(null);
-  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
-  const [axios] = useAxios();
-  const [pendingMoveRight, setPendingMoveRight] = useState(false);
-
-  const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    handleFetchNextPage(page);
-  }, [page]);
-
-  const fetchImages = useCallback(
-    async ({ pageParam }: QueryFunctionContext) => {
-      const [{ data }] = await Promise.all([
-        axios.get('images/all', {
-          params: {
-            page: pageParam,
-            pageSize: PAGE_SIZE,
-          },
-        }),
-        sleep(1500),
-      ]);
-
-      return data;
-    },
-    [axios],
-  );
-
-  const {
-    fetchNextPage,
-    data: imageData,
-    isFetching,
-    isFetchedAfterMount,
-  } = useInfiniteQuery<ImagesResponse[]>({
-    queryKey: ['images'],
-    queryFn: fetchImages,
-  });
-
-  const data = useMemo(() => imageData?.pages?.flat() ?? [], [imageData]);
-  const columnedData = useMemo(
-    () =>
-      data.reduce<Array<ImagesResponse[]>>((result, image, index) => {
-        const columnIndex = index % COLUMN_COUNT;
-
-        result[columnIndex] ??= [];
-        result[columnIndex].push(image);
-
-        return result;
-      }, []),
-    [data, COLUMN_COUNT],
-  );
-
-  const handleClick = (imageUrl: string, index: number) => {
-    setCurrentIndex(index);
-    setClickedImg(imageUrl);
-  };
-
-  const hasMore = useMemo(
-    () => imageData?.pages.at(-1)?.length !== PAGE_SIZE - 1,
-    [imageData],
-  );
-
-  const handleNavigationRight = () => {
-    console.log(
-      'right',
-      currentIndex,
-      currentIndex! + 1 === data.length,
-      !hasMore,
-    );
-    const totalLength = data.length;
-
-    if (currentIndex === null || (currentIndex >= totalLength && !hasMore)) {
-      setCurrentIndex(0);
-      const newUrl = data[0].imageFileName;
-      setClickedImg(newUrl);
-      return;
-    }
-    if (currentIndex + 1 >= totalLength && hasMore) {
-      setPendingMoveRight(true);
-      setPage((page) => page + 1);
-      return;
-    }
-    const newIndex = currentIndex + 1;
-    const newUrl = data[newIndex].imageFileName;
-
-    setClickedImg(newUrl);
-    setCurrentIndex(newIndex);
-  };
-
-  const handleNavigationLeft = () => {
-    console.log('left', currentIndex, clickedImg);
-    const totalLength = data.length;
-
-    if (currentIndex === 0 || !currentIndex) {
-      return;
-    }
-
-    const newIndex = currentIndex - 1;
-    const newUrl = data[newIndex].imageFileName;
-
-    setClickedImg(newUrl);
-    setCurrentIndex(newIndex);
-  };
-
-  const handleFetchNextPage = useCallback(
-    async (page: number) => {
-      if (isFetching || !hasMore) {
-        console.log(isFetching, hasMore);
-        return;
-      }
-      console.log(2);
-      await fetchNextPage({ pageParam: page });
-      console.log(3);
-      if (pendingMoveRight) {
-        console.log(4);
-        setPendingMoveRight(false);
-        handleNavigationRight();
-      }
-    },
-    [hasMore, isFetching],
-  );
-
+  const [page, setPage] = useState<string>('All');
   return (
     <div className="main-menu">
       <div className="content-layer">
         <Greeter />
-        <div className="galery-content">
-          <div className="line-breaker">
-            <hr></hr>
-          </div>
-          {isFetchedAfterMount && (
-            <InfiniteScroll
-              dataLength={data?.length}
-              next={() => {
-                setPage((page) => page + 1);
-              }}
-              hasMore={hasMore}
-              loader={<></>}
-              endMessage={<h4>Dotarłeś do końca swojej galerii!</h4>}
-            >
-              {/* {data.data.map((item, index) => ( */}
-              <div className="photo-grid-row" key={`page-${1}`}>
-                {columnedData.map((columnData, columnIndex) => (
-                  <div className="photo-grid-column">
-                    {columnData.map((item, itemIndex) => (
-                      <div
-                        className="galery-item"
-                        key={`image--c${columnIndex}-p${itemIndex}-i${1}`}
-                      >
-                        <img
-                          src={item.imageFileName}
-                          onClick={() =>
-                            handleClick(
-                              item.imageFileName,
-                              COLUMN_COUNT * itemIndex + columnIndex,
-                            )
-                          }
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ))}
-                {/* <div className="photo-grid-column">
-                  {data
-                    .filter((_, index) => (index + 1) % 2)
-                    .map((item, itemIndex) => {
-                      return (
-                        <div
-                          className="galery-item"
-                          key={`image-p${itemIndex}-i${1}`}
-                        >
-                          <img
-                            src={item.imageFileName}
-                            onClick={() =>
-                              handleClick(item.imageFileName, itemIndex)
-                            }
-                          />
-                        </div>
-                      );
-                    })}
-                </div> */}
-              </div>
+        <Tabs
+          type="card"
+          onChange={setPage}
+          items={[
+            {
+              label: `Galeria Zdjęć`,
+              key: 'All',
+              children: <></>,
+            },
 
-              {/* })} */}
-            </InfiniteScroll>
-          )}
-          {clickedImg && (
-            <Modal
-              clickedImg={clickedImg}
-              handleNavigationLeft={handleNavigationLeft}
-              handleNavigationRight={handleNavigationRight}
-              setClickedImg={setClickedImg}
-              hideLeft={currentIndex === 0}
-              hideRight={
-                !!currentIndex && currentIndex === data.length - 1 && !hasMore
-              }
-            />
-          )}
-          {(!isFetchedAfterMount || isFetching) && hasMore && (
-            <PacmanLoader color="#ffff00" />
-          )}
-        </div>
+            {
+              label: `Moje Zdjęcia`,
+              key: 'My',
+              children: <></>,
+            },
+          ]}
+        />
+
+        {page === 'All' ? <AllGalery /> : <MyGalery />}
       </div>
     </div>
   );

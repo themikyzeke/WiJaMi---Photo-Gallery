@@ -7,7 +7,7 @@ export interface ModalProps {
   hideLeft: boolean;
 }
 
-const Modal = ({
+const CloseViewModal = ({
   clickedImg,
   handleNavigationLeft,
   handleNavigationRight,
@@ -69,4 +69,4 @@ const Modal = ({
   );
 };
 
-export default Modal;
+export default CloseViewModal;

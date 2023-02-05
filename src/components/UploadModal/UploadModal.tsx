@@ -3,6 +3,7 @@ import { Button, message, Modal, UploadProps } from 'antd';
 import { InboxOutlined } from '@ant-design/icons';
 import Dragger from 'antd/es/upload/Dragger';
 import { useAxios } from '../../contexts/apiClientContext';
+import { useQueryClient } from '@tanstack/react-query';
 
 export interface UploadModalProps {
   isOpen: boolean;
@@ -11,6 +12,8 @@ export interface UploadModalProps {
 
 export const UploadModal: FC<UploadModalProps> = ({ isOpen, onClose }) => {
   const [_, __, token] = useAxios();
+
+  const queryClient = useQueryClient();
   const props: UploadProps = {
     name: 'file',
     multiple: false,
@@ -25,6 +28,7 @@ export const UploadModal: FC<UploadModalProps> = ({ isOpen, onClose }) => {
       }
       if (status === 'done') {
         message.success(`${info.file.name} file uploaded successfully.`);
+        queryClient.invalidateQueries({ queryKey: ['images'] });
       } else if (status === 'error') {
         message.error(`${info.file.name} file upload failed.`);
       }
