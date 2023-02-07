@@ -1,5 +1,5 @@
 import { Tabs } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMeContext } from '../../contexts/meStore';
 import { AllGalery } from './AllGallery';
 import { Greeter } from './Greeter/Greeter';
@@ -15,7 +15,14 @@ const PAGE_SIZE = 5;
 
 export const Gallery = () => {
   const [page, setPage] = useState<string>('All');
-  const isLogggedIn = useMeContext((state) => state.isLoggedIn);
+
+  const isLoggedIn = useMeContext((state) => state.isLoggedIn);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setPage('All');
+    }
+  }, [isLoggedIn]);
   return (
     <div className="main-menu">
       <div className="content-layer">
@@ -27,12 +34,14 @@ export const Gallery = () => {
           >
             Galeria Zdjęć
           </div>
-          {isLogggedIn && <div
-            className={`galery-menu-item ${page === 'My' ? 'active' : ''}`}
-            onClick={() => setPage('My')}
-          >
-            Moje Zdjęcia
-          </div>}
+          {isLoggedIn && (
+            <div
+              className={`galery-menu-item ${page === 'My' ? 'active' : ''}`}
+              onClick={() => setPage('My')}
+            >
+              Moje Zdjęcia
+            </div>
+          )}
         </div>
         {page === 'All' ? <AllGalery /> : <MyGalery />}
       </div>

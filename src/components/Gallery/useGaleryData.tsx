@@ -20,7 +20,6 @@ export const useGalleryData = (
   }, [page]);
 
   useEffect(() => {
-    console.log('changing fetching method');
     setClickedImg(null);
     setCurrentIndex(null);
     setPendingMoveRight(false);
@@ -50,8 +49,6 @@ export const useGalleryData = (
     const lastPageLength = imageData?.pages.at(-1)?.length;
     const pageCount = imageData?.pages?.length;
 
-    console.log('lpl', lastPageLength);
-    console.log('Pc', pageCount);
     if (pageCount === 1 && lastPageLength === 0) {
       return false;
     }
@@ -112,14 +109,10 @@ export const useGalleryData = (
   const handleFetchNextPage = useCallback(
     async (page: number) => {
       if (isFetching || !hasMore) {
-        console.log(isFetching, hasMore);
         return;
       }
-      console.log(2);
       await fetchNextPageInInfiniteQuery({ pageParam: page });
-      console.log(3);
       if (pendingMoveRight) {
-        console.log(4);
         setPendingMoveRight(false);
         handleNavigationRight();
       }

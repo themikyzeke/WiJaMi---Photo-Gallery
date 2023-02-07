@@ -36,7 +36,6 @@ export const useMeContext = create<MeContext>(
         isLoggedIn: true,
         userInfo: userInfo,
       });
-      console.log('set user info');
     },
   }),
 );

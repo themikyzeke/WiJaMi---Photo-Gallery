@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useAxios } from '../../contexts/apiClientContext';
 import { useMeContext } from '../../contexts/meStore';
@@ -8,6 +8,7 @@ import { errorAlert, successAlert } from '../../utils/alerts';
 
 export const Login = (props: any) => {
   const redirectToHomePage = useRedirectToHomePage();
+  const queryClient = useQueryClient();
   const redirectToRegister = useRedirectToRegister();
   const [axios, setToken] = useAxios();
 
@@ -16,12 +17,17 @@ export const Login = (props: any) => {
 
   const isLoggedIn = useMeContext((state) => state.isLoggedIn);
 
-  const sendLogin = useMutation(async () => {
-    const { data: token } = await axios.post<string>('login', {
-      username: name,
-      password: pass,
-    });
-    setToken(token);
+  const sendLogin = useMutation({
+    mutationFn: async () => {
+      const { data: token } = await axios.post<string>('login', {
+        username: name,
+        password: pass,
+      });
+      setToken(token);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries();
+    },
   });
 
   const handleSubmit = (e: { preventDefault: () => void }) => {
